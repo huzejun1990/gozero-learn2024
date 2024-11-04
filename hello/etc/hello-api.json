@@ -1,0 +1,7 @@
+{
+  "name": "hello-api",
+  "port": 8888,
+  "host": "0.0.0.0",
+  "address": "北京-json",
+  "myProp": "hello-json"
+}
