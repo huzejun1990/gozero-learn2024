@@ -3,10 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"gozero-learn2024/hello/internal/config"
-	"gozero-learn2024/hello/internal/handler"
-	"gozero-learn2024/hello/internal/svc"
+	"hello/internal/config"
+	"hello/internal/handler"
+	"hello/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
