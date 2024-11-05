@@ -2,8 +2,8 @@ package account
 
 import (
 	"context"
-	"errors"
 	"time"
+	"user-api/internal/biz"
 	"user-api/internal/model"
 
 	"user-api/internal/svc"
@@ -32,10 +32,10 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	user, err := userModel.FindByUsername(l.ctx, req.Username)
 	if err != nil {
 		l.Logger.Error("查询用户失败：", err)
-		return nil, err
+		return nil, biz.DBError
 	}
 	if user != nil {
-		return nil, errors.New("此用户已注册")
+		return nil, biz.AlreadyRegister
 	}
 	//2.如果不存在，插入用户数据 注册
 	_, err = userModel.Insert(l.ctx, &model.User{
@@ -45,7 +45,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		LastLoginTime: time.Now(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, biz.DBError
 	}
 	return
 }
