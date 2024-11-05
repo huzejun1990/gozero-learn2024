@@ -2,6 +2,7 @@ package account
 
 import (
 	"net/http"
+	"user-api/internal/biz"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"user-api/internal/logic/account"
@@ -22,7 +23,7 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
+			httpx.OkJsonCtx(r.Context(), w, biz.Success(resp))
 		}
 	}
 }
