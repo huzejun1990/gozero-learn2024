@@ -24,7 +24,27 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf)
+	server := rest.MustNewServer(
+		c.RestConf,
+		rest.WithCustomCors(func(header http.Header) {
+			var allowOrigin = "Access-Control-Allow-Origin"
+			var allOrigins = "http://localhost:5173"
+			var allowMethods = "Access-Control-Allow-Methods"
+			var allowHeaders = "Access-Control-Allow-Headers"
+			var exposeHeaders = "Access-Control-Expose-Headers"
+			var methods = "GET, HEAD, POST, PATCH, PUT, DELETE, OPTIONS"
+			var allowHeadersVal = "xxxx, Content-Type, Origin, X-CSRF-Token, Authorization, AccessToken, Token, Range"
+			var exposeHeadersVal = "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers"
+			var maxAgeHeader = "Access-Control-Max-Age"
+			var maxAgeHeaderVal = "86400"
+			header.Set(allowOrigin, allOrigins)
+			header.Set(allowMethods, methods)
+			header.Set(allowHeaders, allowHeadersVal)
+			header.Set(exposeHeaders, exposeHeadersVal)
+			header.Set(maxAgeHeader, maxAgeHeaderVal)
+		}, func(writer http.ResponseWriter) {
+
+		}))
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
