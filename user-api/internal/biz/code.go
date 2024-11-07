@@ -8,4 +8,5 @@ var (
 	AlreadyRegister     = NewError(10100, "用户已注册")
 	UserNameAndPwdError = NewError(10101, "用户密码不正确")
 	TokenError          = NewError(10102, "token错误")
+	RedisError          = NewError(10103, "redis错误")
 )

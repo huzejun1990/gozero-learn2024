@@ -2,6 +2,7 @@ package account
 
 import (
 	"context"
+	"strconv"
 	"time"
 	"user-api/internal/biz"
 	"user-api/internal/model"
@@ -45,6 +46,18 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, biz.TokenError
 	}
+	//3.把token存入redis中，操作过期，踢掉线
+	//把token存入redis
+	err = l.svcCtx.RedisClient.SetexCtx(context.Background(), "token:"+token, strconv.FormatInt(user.Id, 10), int(expire))
+	if err != nil {
+		return nil, biz.RedisError
+	}
+	/*	err = l.svcCtx.Redis.SetexCtx(l.ctx, "token:"+token, strconv.FormatInt(user.Id, 10), int(expire))
+		if err != nil {
+			l.Logger.Error("存入redis失败:", err)
+			return nil, biz.RedisError
+		}*/
+
 	resp = &types.LoginResp{
 		Token: token,
 	}

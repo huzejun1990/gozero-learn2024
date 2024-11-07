@@ -7,3 +7,10 @@ mysqlConfig:
 auth:
   AccessSecret: "secret123456"
   expire: 86400
+RedisConfig:
+  Host: "127.0.0.1:6379"
+#  Pass: "mszlu"  # redis登录密码，如果redis没有设置，不要传入，否则会报错
+  Type: "node"
+  Tls: false
+  NonBlock: false
+  PingTimeout: 1s

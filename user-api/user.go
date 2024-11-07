@@ -45,6 +45,13 @@ func main() {
 		}, func(writer http.ResponseWriter) {
 
 		}))
+	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
+
+		return func(writer http.ResponseWriter, request *http.Request) {
+			writer.Header().Set("aaaaaaaaaaaaaaa", "true")
+			next(writer, request)
+		}
+	})
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
