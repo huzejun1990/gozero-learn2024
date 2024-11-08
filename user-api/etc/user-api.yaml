@@ -14,3 +14,7 @@ RedisConfig:
   Tls: false
   NonBlock: false
   PingTimeout: 1s
+Signature:
+  PrivateKeys:
+    - Fingerprint: "kQz7qW/LWL+10KatnBaX3A=="
+      KeyFile: "etc/pri.key"

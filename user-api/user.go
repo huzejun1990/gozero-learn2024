@@ -26,7 +26,21 @@ func main() {
 
 	server := rest.MustNewServer(
 		c.RestConf,
-		rest.WithCustomCors(func(header http.Header) {
+		rest.WithCors("*"),
+		rest.WithCorsHeaders("X-Content-Security"),
+		rest.WithUnsignedCallback(func(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) {
+			fmt.Println("签名未通过")
+		}),
+	)
+
+	//server := rest.MustNewServer(
+	//	c.RestConf,
+	//	rest.WithCors("*"),
+	//	rest.WithCorsHeaders("X-Content-Security"),
+	//	rest.WithUnsignedCallback(func(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) {
+	//		fmt.Println("签名未通过")
+	//	}),
+	/*		rest.WithCustomCors(func(header http.Header) {
 			var allowOrigin = "Access-Control-Allow-Origin"
 			var allOrigins = "http://localhost:5173"
 			var allowMethods = "Access-Control-Allow-Methods"
@@ -41,10 +55,9 @@ func main() {
 			header.Set(allowMethods, methods)
 			header.Set(allowHeaders, allowHeadersVal)
 			header.Set(exposeHeaders, exposeHeadersVal)
-			header.Set(maxAgeHeader, maxAgeHeaderVal)
-		}, func(writer http.ResponseWriter) {
-
-		}))
+			header.Set(maxAgeHeader, maxAgeHeaderVal)*/
+	//}
+	//)
 	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
 
 		return func(writer http.ResponseWriter, request *http.Request) {
