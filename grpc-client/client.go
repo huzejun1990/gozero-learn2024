@@ -15,7 +15,8 @@ func main() {
 	var clientConf zrpc.RpcClientConf
 	conf.MustLoad("etc/client.yml", &clientConf)
 	//conn := zrpc.MustNewClient(clientConf)
-	conn, err := grpc.NewClient(clientConf.Target, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	//client := greet.NewGreetClient(conn.Conn())
+	conn, err := grpc.NewClient("etcd://127.0.0.1:2379/greet.rpc", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}
