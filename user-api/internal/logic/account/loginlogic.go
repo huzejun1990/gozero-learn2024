@@ -2,6 +2,8 @@ package account
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 	"user-api/internal/biz"
@@ -61,6 +63,25 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	resp = &types.LoginResp{
 		Token: token,
 	}
+	//4.记录日志
+	go func() {
+		logData := map[string]any{
+			"username": user.Username,
+			"ip":       l.ctx.Value("ip"),
+			"userId":   user.Id,
+			"time":     time.Now().Format("2006-01-02 15:04:05"),
+			"type":     "login",
+			"msg":      "登录成功",
+		}
+		bytes, _ := json.Marshal(logData)
+		err2 := l.svcCtx.KafkaPushCli.PushWithKey(
+			context.Background(),
+			fmt.Sprintf("log_%s", user.Id),
+			string(bytes))
+		if err2 != nil {
+			l.Logger.Error("写入日志失败:", err2)
+		}
+	}()
 	return
 
 }

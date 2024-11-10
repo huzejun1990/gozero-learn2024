@@ -1,6 +1,11 @@
 Name: user-api
 Host: 0.0.0.0
 Port: 8888
+Middlewares:
+  Breaker: false
+  Log: true
+Verbose: true
+MaxConns: 1
 mysqlConfig:
   datasource: "root:123456@tcp(127.0.0.1:3306)/zero_test?charset=utf8mb4&parseTime=True&loc=Local"
   connectTimeout: 10
@@ -18,3 +23,17 @@ Signature:
   PrivateKeys:
     - Fingerprint: "kQz7qW/LWL+10KatnBaX3A=="
       KeyFile: "etc/pri.key"
+KqPusherConf:
+  Name: log-producer
+  Brokers:
+#    - 127.0.0.1:9094
+    - 127.0.0.1:9092
+  Topic: login-log
+  Group: login-log-group
+KqConsumerConf:
+  Name: log-consumer
+  Brokers:
+#    - 127.0.0.1:9094
+    - 127.0.0.1:9092
+  Group: login-login-group
+  Topic: login-log

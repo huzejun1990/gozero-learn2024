@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"user-api/internal/biz"
+	"user-api/internal/queue"
 
 	"user-api/internal/config"
 	"user-api/internal/handler"
@@ -29,9 +32,18 @@ func main() {
 		rest.WithCors("*"),
 		rest.WithCorsHeaders("X-Content-Security"),
 		rest.WithUnsignedCallback(func(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) {
-			fmt.Println("签名未通过")
+			fmt.Println("-------------签名未通过")
 		}),
 	)
+
+	//server := rest.MustNewServer(
+	//	c.RestConf,
+	//	rest.WithCors("*"),
+	//	rest.WithCorsHeaders("X-Content-Security"),
+	//	rest.WithUnsignedCallback(func(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) {
+	//		fmt.Println("签名未通过")
+	//	}),
+	//)
 
 	//server := rest.MustNewServer(
 	//	c.RestConf,
@@ -81,5 +93,12 @@ func main() {
 		}
 	})
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
-	server.Start()
+	serviceGroup := service.NewServiceGroup()
+	defer serviceGroup.Start()
+	serviceGroup.Add(server)
+	for _, v := range queue.Consumers(c.KqConsumerConf, context.Background(), ctx) {
+		serviceGroup.Add(v)
+	}
+	serviceGroup.Start()
+	//server.Start()
 }
