@@ -15,7 +15,6 @@ import (
 	"user-api/internal/handler"
 	"user-api/internal/svc"
 
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -23,9 +22,12 @@ var configFile = flag.String("f", "etc/user-api.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-
+	//微服务的环境下， 很多的微服务 很多的配置文件
+	//部署的时候 有很多的集群 服务器 每个服务器 可能 涉及到多个配置
+	//一旦配置有变更 可能就需要给推成百上千的服务器配置
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	c = config.PullConfig()
+	//conf.MustLoad(*configFile, &c)
 
 	server := rest.MustNewServer(
 		c.RestConf,
