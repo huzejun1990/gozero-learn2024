@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
@@ -26,8 +27,8 @@ func main() {
 	//部署的时候 有很多的集群 服务器 每个服务器 可能 涉及到多个配置
 	//一旦配置有变更 可能就需要给推成百上千的服务器配置
 	var c config.Config
-	c = config.PullConfig()
-	//conf.MustLoad(*configFile, &c)
+	//c = config.PullConfig()
+	conf.MustLoad(*configFile, &c)
 
 	server := rest.MustNewServer(
 		c.RestConf,
